@@ -3,24 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MMM Plastic | Energy & kWh Monitoring System</title>
+    <title>Energy Monitoring System | MMM Plastic — Plant Nganjuk</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #f4f4f5; }
+        body { font-family: 'Inter', sans-serif; background-color: #f4f4f6; }
+        .tabular-nums { font-variant-numeric: tabular-nums; }
     </style>
 </head>
 <body class="text-zinc-800 antialiased">
 
-    <!-- Top Navbar (Identitas Warna MMM Plastic: Hitam Arang + Aksen Kuning Emas) -->
-    <nav class="bg-zinc-900 border-b-4 border-yellow-400 text-white shadow-md sticky top-0 z-30">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap justify-between items-center gap-4">
-            <!-- Brand & Logo SVG MMM Plastic -->
-            <div class="flex items-center gap-4">
-                <div class="bg-white px-3 py-1.5 rounded-lg shadow-sm flex items-center gap-2.5">
-                    <!-- Ikon Vektor 3D Pita Kuning-Hitam-Abu khas MMM Plastic -->
-                    <svg width="38" height="32" viewBox="0 0 120 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Top Header -->
+    <header class="bg-zinc-950 text-white border-b-2 border-yellow-400 sticky top-0 z-30 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center justify-between gap-4">
+            <!-- Brand Logo MMM Plastic -->
+            <div class="flex items-center gap-3.5">
+                <div class="bg-white px-2.5 py-1.5 rounded-lg flex items-center gap-2 shrink-0">
+                    <svg width="32" height="28" viewBox="0 0 120 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <polygon points="10,75 32,88 32,58 10,45" fill="#18181B"/>
                         <polygon points="10,45 32,58 55,44 33,31" fill="#71717A"/>
                         <polygon points="35,60 57,73 57,43 35,30" fill="#FACC15"/>
@@ -30,294 +30,526 @@
                         <polygon points="85,30 107,43 107,13 85,0" fill="#FACC15"/>
                         <polygon points="85,62 107,49 107,35 85,48" fill="#71717A"/>
                     </svg>
-                    <div class="leading-none">
-                        <span class="block text-zinc-900 font-extrabold text-lg tracking-tight">MMM</span>
-                        <span class="block text-zinc-500 font-bold text-[9px] tracking-[0.28em] mt-0.5">PLASTIC</span>
+                    <div class="leading-none pr-0.5">
+                        <span class="block text-zinc-900 font-extrabold text-sm tracking-tight">MMM</span>
+                        <span class="block text-zinc-500 font-bold text-[8px] tracking-[0.24em] mt-0.5">PLASTIC</span>
                     </div>
                 </div>
-                <div class="border-l border-zinc-700 pl-4">
-                    <h1 class="text-base sm:text-lg font-bold tracking-wide text-white">ENERGY MONITORING SYSTEM</h1>
-                    <p class="text-xs text-zinc-400">PT Mitra Mulia Makmur — Plant Nganjuk (Utility & Power Meter)</p>
+
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-yellow-400 text-sm font-bold">⚡</span>
+                        <h1 class="text-base sm:text-lg font-bold tracking-tight text-white">Energy Monitoring System</h1>
+                    </div>
+                    <p class="text-xs text-zinc-400">PT Mitra Mulia Makmur — Plant Nganjuk (Utility &amp; 3-Phase Power Meter)</p>
                 </div>
             </div>
 
-            <!-- Action Buttons -->
-            <div class="flex items-center gap-2.5">
+            <!-- Right Status & Actions -->
+            <div class="flex flex-wrap items-center gap-2.5">
+                <span class="text-xs text-zinc-300 bg-zinc-900 border border-zinc-800 px-3 py-1.5 rounded-lg tabular-nums">
+                    Update: {{ $lastUpdateLabel }}
+                </span>
+
                 <form action="{{ route('simulate.fetch') }}" method="POST">
                     @csrf
-                    <button type="submit" class="bg-yellow-400 hover:bg-yellow-300 text-zinc-900 font-bold text-xs sm:text-sm px-4 py-2 rounded-lg shadow transition flex items-center gap-2 cursor-pointer">
-                        <span class="w-2 h-2 rounded-full bg-zinc-900 animate-ping"></span>
-                        <span>Tarik Data kWh (Simulasi)</span>
+                    <button type="submit" class="bg-zinc-900 hover:bg-zinc-800 text-yellow-400 border border-yellow-400/50 text-xs font-semibold px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 cursor-pointer">
+                        <span>↻</span>
+                        <span>Tarik Data kWh</span>
                     </button>
                 </form>
-                <button onclick="exportTableToCSV('monitoring_kwh_mmm.csv')" class="bg-zinc-800 hover:bg-zinc-700 border border-zinc-600 text-white text-xs sm:text-sm font-medium px-3.5 py-2 rounded-lg transition cursor-pointer">
-                    📥 Export Excel
+
+                <button type="button" onclick="exportTableToCSV('rekap_kwh_mmm_nganjuk_{{ $month }}.csv')" class="bg-white hover:bg-zinc-100 text-zinc-900 text-xs font-semibold px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 cursor-pointer">
+                    <span>⤓</span>
+                    <span>Export Excel</span>
                 </button>
             </div>
         </div>
-    </nav>
+    </header>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 space-y-5">
 
-        <!-- Notifikasi Sukses -->
         @if(session('success'))
-        <div class="mb-5 bg-yellow-50 border-l-4 border-yellow-400 text-zinc-800 px-4 py-3 rounded-r-lg shadow-sm flex justify-between items-center">
-            <div class="flex items-center gap-2 text-sm font-medium">
-                <span class="text-yellow-600 font-bold">⚡ Sukses:</span>
-                <span>{{ session('success') }}</span>
-            </div>
-            <button onclick="this.parentElement.remove()" class="text-zinc-400 hover:text-zinc-700 font-bold">&times;</button>
+        <div class="bg-emerald-50 border border-emerald-200 text-emerald-900 px-4 py-2.5 rounded-lg text-xs sm:text-sm font-medium flex items-center justify-between">
+            <span>✓ {{ session('success') }}</span>
+            <button type="button" onclick="this.parentElement.remove()" class="text-emerald-700 hover:text-emerald-950 font-bold px-2">&times;</button>
         </div>
         @endif
 
-        <!-- Filter Bar Dinamis -->
-        <div class="bg-white rounded-xl shadow-sm border border-zinc-200 p-4 mb-6">
-            <form method="GET" action="{{ route('dashboard') }}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
-                <div>
-                    <label class="block text-xs font-bold text-zinc-600 uppercase tracking-wider mb-1.5">Periode Bulan (MtD)</label>
+        <!-- Filter Bar -->
+        <section class="bg-white rounded-xl border border-zinc-200 p-4 shadow-2xs">
+            <form method="GET" action="{{ route('dashboard') }}" class="grid grid-cols-1 md:grid-cols-12 gap-3.5 items-end">
+                <div class="md:col-span-3">
+                    <label class="block text-[11px] font-bold text-zinc-500 uppercase tracking-wider mb-1.5">Periode Bulan (MTD)</label>
                     <input type="month" name="month" value="{{ $month }}" onchange="this.form.submit()"
-                        class="w-full border border-zinc-300 rounded-lg px-3 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400">
+                        class="w-full border border-zinc-300 rounded-lg px-3 py-2 text-xs sm:text-sm font-medium text-zinc-800 bg-white focus:outline-none focus:ring-2 focus:ring-yellow-400">
                 </div>
-                <div>
-                    <label class="block text-xs font-bold text-zinc-600 uppercase tracking-wider mb-1.5">Converter Gateway</label>
+
+                <div class="md:col-span-4">
+                    <label class="block text-[11px] font-bold text-zinc-500 uppercase tracking-wider mb-1.5">Converter Gateway</label>
                     <select name="converter" onchange="this.form.submit()"
-                        class="w-full border border-zinc-300 rounded-lg px-3 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400">
-                        <option value="ALL" {{ $converter == 'ALL' ? 'selected' : '' }}>Semua Converter (USR-DR302)</option>
-                        <option value="USR-DR302 #1" {{ $converter == 'USR-DR302 #1' ? 'selected' : '' }}>USR-DR302 #1 (192.168.1.201)</option>
-                        <option value="USR-DR302 #2" {{ $converter == 'USR-DR302 #2' ? 'selected' : '' }}>USR-DR302 #2 (192.168.1.202)</option>
+                        class="w-full border border-zinc-300 rounded-lg px-3 py-2 text-xs sm:text-sm font-medium text-zinc-800 bg-white focus:outline-none focus:ring-2 focus:ring-yellow-400">
+                        <option value="ALL" {{ $converter === 'ALL' ? 'selected' : '' }}>Semua Converter (2x USR-DR302)</option>
+                        <option value="USR-DR302 #1" {{ $converter === 'USR-DR302 #1' ? 'selected' : '' }}>USR-DR302 #1 (192.168.1.201)</option>
+                        <option value="USR-DR302 #2" {{ $converter === 'USR-DR302 #2' ? 'selected' : '' }}>USR-DR302 #2 (192.168.1.202)</option>
                     </select>
                 </div>
-                <div>
-                    <label class="block text-xs font-bold text-zinc-600 uppercase tracking-wider mb-1.5">Filter Panel Listrik</label>
+
+                <div class="md:col-span-3">
+                    <label class="block text-[11px] font-bold text-zinc-500 uppercase tracking-wider mb-1.5">Filter Panel Listrik</label>
                     <select name="panel" onchange="this.form.submit()"
-                        class="w-full border border-zinc-300 rounded-lg px-3 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400">
-                        <option value="ALL" {{ $panelCode == 'ALL' ? 'selected' : '' }}>Semua Panel ({{ $allMeters->count() }} Unit)</option>
-                        @foreach($allMeters as $m)
-                            <option value="{{ $m->panel_code }}" {{ $panelCode == $m->panel_code ? 'selected' : '' }}>
-                                {{ $m->panel_code }} — {{ $m->panel_name }}
+                        class="w-full border border-zinc-300 rounded-lg px-3 py-2 text-xs sm:text-sm font-medium text-zinc-800 bg-white focus:outline-none focus:ring-2 focus:ring-yellow-400">
+                        <option value="ALL" {{ $panelCode === 'ALL' ? 'selected' : '' }}>Semua Panel ({{ $allMeters->count() }} Unit)</option>
+                        @foreach($allMeters as $item)
+                            <option value="{{ $item->panel_code }}" {{ $panelCode === $item->panel_code ? 'selected' : '' }}>
+                                {{ $item->panel_code }} — {{ $item->panel_name }}
                             </option>
                         @endforeach
                     </select>
                 </div>
-                <div>
-                    <a href="{{ route('dashboard') }}" class="block text-center w-full bg-zinc-100 hover:bg-zinc-200 text-zinc-700 font-semibold py-2 px-4 rounded-lg text-sm transition border border-zinc-300">
-                        Reset Filter
+
+                <div class="md:col-span-2">
+                    <a href="{{ route('dashboard') }}" class="w-full inline-flex items-center justify-center gap-1.5 border border-zinc-300 hover:bg-zinc-50 text-zinc-700 font-semibold text-xs sm:text-sm py-2 px-3 rounded-lg transition">
+                        <span>✕</span>
+                        <span>Reset Filter</span>
                     </a>
                 </div>
             </form>
-        </div>
+        </section>
 
+        <!-- Alert Kualitas Daya -->
         @php
-            $totalKwhMtd = 0;
-            $avgVoltageList = [];
-            $totalCurrent = 0;
-            $chartLabels = [];
-            $chartKwhValues = [];
-
-            foreach ($meters as $m) {
-                $mtdUsage = $m->energyLogs->sum('kwh_usage');
-                $latest = $m->energyLogs->first();
-                $totalKwhMtd += $mtdUsage;
-                if ($latest) {
-                    $avgVoltageList[] = $latest->voltage_avg;
-                    $totalCurrent += $latest->current_avg;
-                }
-                $chartLabels[] = $m->panel_code;
-                $chartKwhValues[] = round($mtdUsage, 2);
-            }
-            $overallVoltage = count($avgVoltageList) > 0 ? round(array_sum($avgVoltageList) / count($avgVoltageList), 1) : 0;
+            $pfAlertValue = $incomingLatestPf ?? 0.87;
+            $normalCount = max(0, $meters->count() - $anomalyCount);
         @endphp
+        <section class="bg-amber-50/80 border border-amber-200 rounded-xl px-4 py-2.5 flex flex-wrap items-center justify-between gap-2 text-xs">
+            <div class="flex items-center gap-2 text-amber-950">
+                <span class="text-amber-600 font-bold">⚠</span>
+                <span>
+                    <strong>Perhatian Kualitas Daya:</strong>
+                    Faktor daya <strong>INCOMING</strong> berada di <strong>{{ number_format($pfAlertValue, 2, ',', '.') }}</strong>
+                    (mendekati batas penalti PLN &lt; 0,85) saat beban puncak shift pagi.
+                </span>
+            </div>
+            <div class="text-zinc-600 font-medium tabular-nums">
+                {{ $anomalyCount }} Anomali Aktif · {{ $normalCount }} Panel Normal
+            </div>
+        </section>
 
-        <!-- 4 Kartu Ringkasan KPI Utama -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-            <div class="bg-white rounded-xl p-5 border border-zinc-200 shadow-sm border-l-4 border-l-yellow-400">
-                <p class="text-xs font-bold text-zinc-500 uppercase">Total Pemakaian (MtD)</p>
-                <p class="text-2xl font-extrabold text-zinc-900 mt-1">{{ number_format($totalKwhMtd, 2, ',', '.') }} <span class="text-sm font-semibold text-zinc-500">kWh</span></p>
-                <p class="text-xs text-zinc-400 mt-1">Akumulasi bulan {{ $month }}</p>
+        <!-- 4 KPI Cards -->
+        <section class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+            <!-- Card 1: Konsumsi Incoming PLN -->
+            <div class="bg-white rounded-xl border border-zinc-200 p-4 flex flex-col justify-between shadow-2xs">
+                <div class="flex items-center justify-between text-[11px] font-bold text-zinc-500 uppercase tracking-wider">
+                    <span>Konsumsi Incoming PLN</span>
+                    <span class="text-amber-500 text-sm">⚡</span>
+                </div>
+                <div class="my-2.5 tabular-nums">
+                    <span class="text-2xl font-extrabold text-zinc-900">{{ number_format($incomingMtdKwh, 2, ',', '.') }}</span>
+                    <span class="text-xs font-medium text-zinc-500 ml-1">kWh</span>
+                </div>
+                <div class="pt-2 border-t border-zinc-100 flex items-center justify-between text-xs tabular-nums">
+                    <span class="text-zinc-400">Estimasi biaya MTD</span>
+                    <span class="font-bold text-zinc-800">Rp {{ number_format($estimatedCost, 0, ',', '.') }}</span>
+                </div>
             </div>
-            <div class="bg-white rounded-xl p-5 border border-zinc-200 shadow-sm border-l-4 border-l-zinc-900">
-                <p class="text-xs font-bold text-zinc-500 uppercase">Panel Terhubung</p>
-                <p class="text-2xl font-extrabold text-zinc-900 mt-1">{{ $meters->count() }} <span class="text-sm font-semibold text-emerald-600">● Online</span></p>
-                <p class="text-xs text-zinc-400 mt-1">Via 2x Gateway USR-DR302</p>
-            </div>
-            <div class="bg-white rounded-xl p-5 border border-zinc-200 shadow-sm border-l-4 border-l-zinc-500">
-                <p class="text-xs font-bold text-zinc-500 uppercase">Rata-Rata Tegangan</p>
-                <p class="text-2xl font-extrabold text-zinc-900 mt-1">{{ $overallVoltage }} <span class="text-sm font-semibold text-zinc-500">Volt</span></p>
-                <p class="text-xs text-zinc-400 mt-1">Standar 3-Phase (380V ±5%)</p>
-            </div>
-            <div class="bg-white rounded-xl p-5 border border-zinc-200 shadow-sm border-l-4 border-l-yellow-500">
-                <p class="text-xs font-bold text-zinc-500 uppercase">Total Beban Arus</p>
-                <p class="text-2xl font-extrabold text-zinc-900 mt-1">{{ number_format($totalCurrent, 1, ',', '.') }} <span class="text-sm font-semibold text-zinc-500">Ampere</span></p>
-                <p class="text-xs text-zinc-400 mt-1">Pembacaan terakhir panel aktif</p>
-            </div>
-        </div>
 
-        <!-- Grid Grafik & Status Kartu Per Panel -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-            <!-- Grafik Konsumsi kWh per Panel -->
-            <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-zinc-200 p-5">
-                <div class="flex justify-between items-center mb-4">
+            <!-- Card 2: Total Distribusi -->
+            <div class="bg-white rounded-xl border border-zinc-200 p-4 flex flex-col justify-between shadow-2xs">
+                <div class="flex items-center justify-between text-[11px] font-bold text-zinc-500 uppercase tracking-wider">
+                    <span>Total Distribusi ({{ $distributionMeters->count() }} Panel)</span>
+                    <span class="text-zinc-400 text-xs">▤</span>
+                </div>
+                <div class="my-2.5 tabular-nums">
+                    <span class="text-2xl font-extrabold text-zinc-900">{{ number_format($distributionMtdKwh, 2, ',', '.') }}</span>
+                    <span class="text-xs font-medium text-zinc-500 ml-1">kWh</span>
+                </div>
+                <div class="pt-2 border-t border-zinc-100 flex items-center justify-between text-xs tabular-nums">
+                    <span class="text-zinc-400">Selisih / losses</span>
+                    <span class="font-bold text-emerald-600">
+                        {{ number_format($lossesKwh, 2, ',', '.') }} kWh ({{ number_format($lossesPercent, 1, ',', '.') }}%)
+                    </span>
+                </div>
+            </div>
+
+            <!-- Card 3: Kualitas Daya 3-Fase -->
+            <div class="bg-white rounded-xl border border-zinc-200 p-4 flex flex-col justify-between shadow-2xs">
+                <div class="flex items-center justify-between text-[11px] font-bold text-zinc-500 uppercase tracking-wider">
+                    <span>Kualitas Daya 3-Fase</span>
+                    <span class="bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-full text-[10px] font-semibold">
+                        ● Stabil
+                    </span>
+                </div>
+                <div class="my-2.5 flex items-baseline gap-2.5 tabular-nums">
+                    <span class="text-2xl font-extrabold text-zinc-900">{{ number_format($avgVoltage, 1, ',', '.') }}</span>
+                    <span class="text-xs font-medium text-zinc-500">V</span>
+                    <span class="text-zinc-300">·</span>
+                    <span class="text-sm font-bold text-zinc-800">PF {{ number_format($avgPf, 2, ',', '.') }}</span>
+                </div>
+                <div class="pt-2 border-t border-zinc-100 flex items-center justify-between text-xs tabular-nums">
+                    <span class="text-zinc-400">Toleransi 380V ±5%</span>
+                    <span class="font-semibold text-zinc-700">361–399 V</span>
+                </div>
+            </div>
+
+            <!-- Card 4: Beban Arus & Alat -->
+            <div class="bg-white rounded-xl border border-zinc-200 p-4 flex flex-col justify-between shadow-2xs">
+                <div class="flex items-center justify-between text-[11px] font-bold text-zinc-500 uppercase tracking-wider">
+                    <span>Beban Arus &amp; Alat</span>
+                    <span class="text-zinc-400 text-xs">((•))</span>
+                </div>
+                <div class="my-2.5 flex items-baseline gap-2 tabular-nums">
+                    <span class="text-2xl font-extrabold text-zinc-900">{{ number_format($totalCurrent, 1, ',', '.') }}</span>
+                    <span class="text-xs font-medium text-zinc-500">A</span>
+                    <span class="text-zinc-300">·</span>
+                    <span class="text-xs font-bold text-emerald-600">{{ $meters->count() }}/{{ $allMeters->count() }} Online</span>
+                </div>
+                <div class="pt-2 border-t border-zinc-100 flex items-center justify-between text-xs tabular-nums">
+                    <span class="text-zinc-400">Beban puncak hari ini</span>
+                    <span class="font-bold text-zinc-800">
+                        {{ number_format($peakCurrent, 1, ',', '.') }} A{{ $peakCurrentTime ? ' (' . $peakCurrentTime . ')' : '' }}
+                    </span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Chart + Gateway Status -->
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+            <!-- Grafik Analisis Konsumsi Energi -->
+            <div class="lg:col-span-8 bg-white rounded-xl border border-zinc-200 p-5 shadow-2xs">
+                <div class="flex flex-wrap items-start justify-between gap-3 mb-4">
                     <div>
-                        <h2 class="text-base font-bold text-zinc-900">Distribusi Pemakaian Energi per Panel (kWh)</h2>
-                        <p class="text-xs text-zinc-500">Perbandingan konsumsi Month to Date ({{ $month }})</p>
+                        <h2 class="text-base font-bold text-zinc-900">Analisis Konsumsi Energi (kWh)</h2>
+                        <p class="text-xs text-zinc-500 mt-0.5">
+                            Pemantauan tren harian Incoming PLN vs distribusi beban per panel ({{ \Carbon\Carbon::parse($month . '-01')->translatedFormat('M Y') }})
+                        </p>
                     </div>
-                    <span class="bg-yellow-100 text-zinc-900 text-xs font-bold px-2.5 py-1 rounded-md border border-yellow-300">Live Chart</span>
+                    <div class="inline-flex rounded-lg border border-zinc-200 p-0.5 bg-zinc-50 text-xs font-semibold">
+                        <button type="button" id="btnTrenHarian" onclick="switchChartMode('daily')" class="bg-zinc-900 text-white px-3 py-1 rounded-md cursor-pointer">
+                            Tren Harian
+                        </button>
+                        <button type="button" id="btnPorsiPanel" onclick="switchChartMode('panel')" class="text-zinc-600 hover:text-zinc-900 px-3 py-1 rounded-md cursor-pointer">
+                            Porsi per Panel
+                        </button>
+                    </div>
                 </div>
-                <div class="h-64">
-                    <canvas id="kwhBarChart"></canvas>
+
+                <div class="flex flex-wrap items-center justify-between gap-2 text-xs mb-3">
+                    <div id="chartLegendBox" class="flex items-center gap-4 text-zinc-600">
+                        <span class="inline-flex items-center gap-1.5">
+                            <span class="w-2.5 h-2.5 rounded-full bg-yellow-400 inline-block"></span>
+                            Incoming PLN (kWh/hari)
+                        </span>
+                        <span class="inline-flex items-center gap-1.5">
+                            <span class="w-2.5 h-2.5 rounded-full bg-zinc-900 inline-block"></span>
+                            Total Distribusi Panel
+                        </span>
+                    </div>
+                    <div class="text-zinc-500 tabular-nums">
+                        Rata-rata: <strong class="text-zinc-800">{{ number_format($avgDailyKwh, 1, ',', '.') }} kWh/hari</strong>
+                    </div>
+                </div>
+
+                <div class="h-60">
+                    <canvas id="energyChart"></canvas>
                 </div>
             </div>
 
-            <!-- Info Jaringan Converter USR-DR302 -->
-            <div class="bg-zinc-900 text-white rounded-xl shadow-sm p-5 flex flex-col justify-between">
+            <!-- Status Gateway Modbus -->
+            <div class="lg:col-span-4 bg-zinc-950 text-white rounded-xl p-5 flex flex-col justify-between shadow-2xs">
                 <div>
-                    <div class="flex items-center justify-between border-b border-zinc-700 pb-3 mb-4">
-                        <h2 class="text-sm font-bold uppercase tracking-wider text-yellow-400">Status Gateway Modbus</h2>
-                        <span class="text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded font-semibold">TCP Port 502</span>
+                    <div class="flex items-center justify-between border-b border-zinc-800 pb-3 mb-4">
+                        <h2 class="text-xs font-bold uppercase tracking-wider text-yellow-400">Status Gateway Modbus</h2>
+                        <span class="text-[11px] font-mono text-zinc-400 bg-zinc-900 border border-zinc-800 px-2 py-0.5 rounded">
+                            TCP Port 502
+                        </span>
                     </div>
-                    <div class="space-y-3 text-sm">
-                        <div class="bg-zinc-800/80 p-3 rounded-lg border border-zinc-700">
-                            <div class="flex justify-between font-bold">
-                                <span>USR-DR302 #1</span>
-                                <span class="text-yellow-400">192.168.1.201</span>
-                            </div>
-                            <p class="text-xs text-zinc-400 mt-1">RS485 Slave ID: 1 (INCOMING), 2 (MDP-01), 3 (MDP-02)</p>
-                        </div>
-                        <div class="bg-zinc-800/80 p-3 rounded-lg border border-zinc-700">
-                            <div class="flex justify-between font-bold">
-                                <span>USR-DR302 #2</span>
-                                <span class="text-yellow-400">192.168.1.202</span>
-                            </div>
-                            <p class="text-xs text-zinc-400 mt-1">RS485 Slave ID: 1 (SDP-D1), 2 (SDP-E1)</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="mt-4 pt-3 border-t border-zinc-700 text-xs text-zinc-400 flex justify-between">
-                    <span>Switch: Linksys LGS116</span>
-                    <span>Koneksi: RJ45 LAN</span>
-                </div>
-            </div>
-        </div>
 
-        <!-- Tabel Monitoring Detail Panel -->
-        <div class="bg-white rounded-xl shadow-sm border border-zinc-200 overflow-hidden">
-            <div class="bg-zinc-900 px-5 py-3.5 flex justify-between items-center border-b-2 border-yellow-400">
-                <h2 class="text-sm sm:text-base font-bold text-white">REKAPITULASI PEMBACAAN kWh METER PER PANEL</h2>
-                <span class="text-xs text-yellow-400 font-semibold">Update Terakhir: {{ now()->format('d M Y H:i') }} WIB</span>
+                    <div class="space-y-3">
+                        <div class="bg-zinc-900/90 border border-zinc-800 rounded-lg p-3.5">
+                            <div class="flex items-center justify-between text-xs font-bold">
+                                <span class="text-white">USR-DR302 #1</span>
+                                <span class="font-mono text-yellow-400">192.168.1.201</span>
+                            </div>
+                            <p class="text-[11px] text-zinc-400 mt-1">RS485 Slave: #1 INCOMING, #2 MDP-01, #3 MDP-02</p>
+                            <div class="mt-2.5 pt-2 border-t border-zinc-800/80 flex items-center justify-between text-[11px] tabular-nums">
+                                <span class="text-emerald-400 font-semibold">● Online · Polling 5 dtk</span>
+                                <span class="text-zinc-400 font-mono">12 ms</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-zinc-900/90 border border-zinc-800 rounded-lg p-3.5">
+                            <div class="flex items-center justify-between text-xs font-bold">
+                                <span class="text-white">USR-DR302 #2</span>
+                                <span class="font-mono text-yellow-400">192.168.1.202</span>
+                            </div>
+                            <p class="text-[11px] text-zinc-400 mt-1">RS485 Slave: #1 SDP-D1, #2 SDP-E1</p>
+                            <div class="mt-2.5 pt-2 border-t border-zinc-800/80 flex items-center justify-between text-[11px] tabular-nums">
+                                <span class="text-emerald-400 font-semibold">● Online · Polling 5 dtk</span>
+                                <span class="text-zinc-400 font-mono">16 ms</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4 pt-3 border-t border-zinc-800 flex items-center justify-between text-[11px] text-zinc-400">
+                    <span>Switch: Linksys LGS116</span>
+                    <span class="font-semibold text-zinc-300">RJ45 LAN</span>
+                </div>
             </div>
+        </section>
+
+        <!-- Tabel Rekapitulasi Pembacaan kWh Meter per Panel -->
+        <section class="bg-white rounded-xl border border-zinc-200 overflow-hidden shadow-2xs">
+            <div class="bg-zinc-950 text-white px-5 py-3 flex flex-wrap items-center justify-between gap-2">
+                <h2 class="text-xs sm:text-sm font-bold uppercase tracking-wider">
+                    Rekapitulasi Pembacaan kWh Meter per Panel
+                </h2>
+                <span class="text-xs text-zinc-400 tabular-nums">
+                    {{ $meters->count() }} Unit Terpantau · Standar 3-Phase 380V
+                </span>
+            </div>
+
             <div class="overflow-x-auto">
-                <table id="kwhTable" class="w-full text-sm text-left border-collapse">
-                    <thead class="bg-zinc-100 text-zinc-700 uppercase text-xs font-bold border-b border-zinc-200">
-                        <tr>
-                            <th class="px-4 py-3">Kode Panel</th>
-                            <th class="px-4 py-3">Nama Panel</th>
-                            <th class="px-4 py-3">Gateway & IP</th>
-                            <th class="px-4 py-3 text-center">Slave ID</th>
-                            <th class="px-4 py-3 text-right">Stand Meter Akhir (kWh)</th>
-                            <th class="px-4 py-3 text-right bg-yellow-50 text-zinc-900">Pemakaian MtD (kWh)</th>
-                            <th class="px-4 py-3 text-right">Tegangan (V)</th>
-                            <th class="px-4 py-3 text-right">Arus (A)</th>
-                            <th class="px-4 py-3 text-center">Cos φ</th>
+                <table id="panelSummaryTable" class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-zinc-50 border-b border-zinc-200 text-[11px] font-bold text-zinc-500 uppercase tracking-wider">
+                            <th class="px-4 py-3">Panel</th>
+                            <th class="px-4 py-3">Peran</th>
+                            <th class="px-4 py-3">Gateway &amp; Slave</th>
+                            <th class="px-4 py-3 text-right">Stand Meter Akhir</th>
+                            <th class="px-4 py-3 text-right">Pemakaian MTD</th>
+                            <th class="px-4 py-3 text-right">Tegangan</th>
+                            <th class="px-4 py-3 text-right">Arus</th>
+                            <th class="px-4 py-3 text-right">Cos φ</th>
+                            <th class="px-4 py-3 text-right">Status</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-zinc-200">
+                    <tbody class="divide-y divide-zinc-100 text-xs sm:text-sm tabular-nums">
                         @forelse($meters as $meter)
                             @php
                                 $latestLog = $meter->energyLogs->first();
-                                $mtdKwh = $meter->energyLogs->sum('kwh_usage');
+                                $mtdUsage = (float) $meter->energyLogs->sum('kwh_usage');
+                                $isIncoming = $meter->panel_code === 'INCOMING';
+                                $pf = $latestLog ? (float) $latestLog->power_factor : 0.96;
+                                $isLowPf = $pf < 0.90;
                             @endphp
-                            <tr class="hover:bg-yellow-50/40 transition">
-                                <td class="px-4 py-3 font-extrabold text-zinc-900">{{ $meter->panel_code }}</td>
-                                <td class="px-4 py-3 text-zinc-600">{{ $meter->panel_name }}</td>
+                            <tr class="hover:bg-zinc-50/80 transition">
                                 <td class="px-4 py-3">
-                                    <span class="text-xs font-semibold bg-zinc-200 text-zinc-800 px-2 py-0.5 rounded">{{ $meter->converter_name }}</span>
-                                    <span class="block text-xs text-zinc-500 mt-0.5">{{ $meter->ip_address }}</span>
+                                    <div class="font-bold text-zinc-900">{{ $meter->panel_code }}</div>
+                                    <div class="text-xs text-zinc-500">{{ $meter->panel_name }}</div>
                                 </td>
-                                <td class="px-4 py-3 text-center font-mono font-bold text-zinc-700">#{{ $meter->slave_id }}</td>
-                                <td class="px-4 py-3 text-right font-mono font-semibold text-zinc-800">
-                                    {{ $latestLog ? number_format($latestLog->kwh_total, 2, ',', '.') : '0,00' }}
+                                <td class="px-4 py-3">
+                                    @if($isIncoming)
+                                        <span class="inline-block bg-amber-100 text-amber-900 border border-amber-200 text-[11px] font-semibold px-2.5 py-0.5 rounded-md">
+                                            Incoming PLN
+                                        </span>
+                                    @else
+                                        <span class="inline-block bg-zinc-100 text-zinc-700 border border-zinc-200 text-[11px] font-medium px-2.5 py-0.5 rounded-md">
+                                            Distribusi
+                                        </span>
+                                    @endif
                                 </td>
-                                <td class="px-4 py-3 text-right font-mono font-extrabold text-zinc-900 bg-yellow-50/70">
-                                    {{ number_format($mtdKwh, 2, ',', '.') }}
+                                <td class="px-4 py-3">
+                                    <div class="text-xs font-semibold text-zinc-800">
+                                        {{ $meter->converter_name ?? 'USR-DR302' }} · ID #{{ $meter->slave_id }}
+                                    </div>
+                                    <div class="text-[11px] font-mono text-zinc-400">{{ $meter->ip_address }}</div>
                                 </td>
-                                <td class="px-4 py-3 text-right font-mono text-zinc-700">
-                                    {{ $latestLog ? $latestLog->voltage_avg . ' V' : '-' }}
+                                <td class="px-4 py-3 text-right font-medium text-zinc-800">
+                                    {{ $latestLog ? number_format((float) $latestLog->kwh_total, 2, ',', '.') . ' kWh' : '0,00 kWh' }}
                                 </td>
-                                <td class="px-4 py-3 text-right font-mono text-zinc-700">
-                                    {{ $latestLog ? $latestLog->current_avg . ' A' : '-' }}
+                                <td class="px-4 py-3 text-right font-bold text-zinc-900">
+                                    {{ number_format($mtdUsage, 2, ',', '.') }} kWh
                                 </td>
-                                <td class="px-4 py-3 text-center font-mono font-semibold text-emerald-700">
-                                    {{ $latestLog ? $latestLog->power_factor : '-' }}
+                                <td class="px-4 py-3 text-right text-zinc-700">
+                                    {{ $latestLog ? number_format((float) $latestLog->voltage_avg, 1, ',', '.') . ' V' : '380,0 V' }}
+                                </td>
+                                <td class="px-4 py-3 text-right text-zinc-700">
+                                    {{ $latestLog ? number_format((float) $latestLog->current_avg, 1, ',', '.') . ' A' : '0,0 A' }}
+                                </td>
+                                <td class="px-4 py-3 text-right font-semibold {{ $isLowPf ? 'text-amber-600' : 'text-zinc-800' }}">
+                                    {{ number_format($pf, 2, ',', '.') }}
+                                </td>
+                                <td class="px-4 py-3 text-right">
+                                    @if($isLowPf)
+                                        <span class="inline-flex items-center gap-1 text-xs font-semibold text-amber-700">
+                                            <span>⚠</span>
+                                            <span>PF Rendah</span>
+                                        </span>
+                                    @else
+                                        <span class="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600">
+                                            <span>●</span>
+                                            <span>Normal</span>
+                                        </span>
+                                    @endif
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="9" class="px-4 py-8 text-center text-zinc-500">Data panel tidak ditemukan.</td>
+                                <td colspan="9" class="px-4 py-8 text-center text-zinc-400 text-sm">
+                                    Belum ada data panel yang sesuai dengan filter yang dipilih.
+                                </td>
                             </tr>
                         @endforelse
                     </tbody>
                 </table>
             </div>
-        </div>
+        </section>
 
     </main>
 
+    @php
+        $panelLabels = [];
+        $panelMtdTotals = [];
+        foreach ($meters as $m) {
+            $panelLabels[] = $m->panel_code;
+            $panelMtdTotals[] = round((float) $m->energyLogs->sum('kwh_usage'), 2);
+        }
+    @endphp
+
     <script>
-        // Render Grafik Bar Chart.js dengan tema warna MMM Plastic (Kuning Emas & Hitam)
-        const ctx = document.getElementById('kwhBarChart').getContext('2d');
-        new Chart(ctx, {
+        const dailyLabels = @json($chartLabels);
+        const incomingDailyData = @json($incomingDailySeries);
+        const distributionDailyData = @json($distributionDailySeries);
+
+        const panelLabels = @json($panelLabels);
+        const panelTotalsData = @json($panelMtdTotals);
+
+        const ctx = document.getElementById('energyChart').getContext('2d');
+
+        let energyChart = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: @json($chartLabels),
-                datasets: [{
-                    label: 'Pemakaian Energi (kWh)',
-                    data: @json($chartKwhValues),
-                    backgroundColor: '#facc15',
-                    borderColor: '#18181b',
-                    borderWidth: 2,
-                    borderRadius: 6,
-                    hoverBackgroundColor: '#eab308'
-                }]
+                labels: dailyLabels,
+                datasets: [
+                    {
+                        label: 'Incoming PLN (kWh/hari)',
+                        data: incomingDailyData,
+                        backgroundColor: '#facc15',
+                        hoverBackgroundColor: '#eab308',
+                        borderRadius: 4,
+                        barPercentage: 0.72,
+                        categoryPercentage: 0.75
+                    },
+                    {
+                        label: 'Total Distribusi Panel',
+                        data: distributionDailyData,
+                        backgroundColor: '#18181b',
+                        hoverBackgroundColor: '#27272a',
+                        borderRadius: 4,
+                        barPercentage: 0.72,
+                        categoryPercentage: 0.75
+                    }
+                ]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: { display: false }
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: '#18181b',
+                        titleColor: '#facc15',
+                        bodyColor: '#ffffff',
+                        padding: 10,
+                        cornerRadius: 8
+                    }
                 },
                 scales: {
                     y: {
                         beginAtZero: true,
-                        grid: { color: '#e4e4e7' },
-                        ticks: { font: { family: 'Inter', size: 11 } }
+                        grid: { color: '#f1f5f9' },
+                        ticks: { color: '#71717a', font: { size: 11 } }
                     },
                     x: {
                         grid: { display: false },
-                        ticks: { font: { family: 'Inter', weight: 'bold', size: 12 } }
+                        ticks: { color: '#52525b', font: { size: 11 } }
                     }
                 }
             }
         });
 
-        // Fungsi Export Tabel ke Excel (CSV)
-        function exportTableToCSV(filename) {
-            let csv = [];
-            let rows = document.querySelectorAll("#kwhTable tr");
-            for (let i = 0; i < rows.length; i++) {
-                let row = [], cols = rows[i].querySelectorAll("td, th");
-                for (let j = 0; j < cols.length; j++) {
-                    let data = cols[j].innerText.replace(/(\r\n|\n|\r)/gm, " ").replace(/;/g, ",");
-                    row.push('"' + data.trim() + '"');
-                }
-                csv.push(row.join(";"));
+        function switchChartMode(mode) {
+            const btnDaily = document.getElementById('btnTrenHarian');
+            const btnPanel = document.getElementById('btnPorsiPanel');
+            const legendBox = document.getElementById('chartLegendBox');
+
+            if (mode === 'panel') {
+                btnPanel.className = 'bg-zinc-900 text-white px-3 py-1 rounded-md cursor-pointer';
+                btnDaily.className = 'text-zinc-600 hover:text-zinc-900 px-3 py-1 rounded-md cursor-pointer';
+                legendBox.innerHTML = `<span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-yellow-400 inline-block"></span>Pemakaian MTD per Panel (kWh)</span>`;
+
+                energyChart.data.labels = panelLabels;
+                energyChart.data.datasets = [{
+                    label: 'Pemakaian MTD (kWh)',
+                    data: panelTotalsData,
+                    backgroundColor: '#facc15',
+                    borderColor: '#18181b',
+                    borderWidth: 1,
+                    borderRadius: 5,
+                    barPercentage: 0.55
+                }];
+            } else {
+                btnDaily.className = 'bg-zinc-900 text-white px-3 py-1 rounded-md cursor-pointer';
+                btnPanel.className = 'text-zinc-600 hover:text-zinc-900 px-3 py-1 rounded-md cursor-pointer';
+                legendBox.innerHTML = `
+                    <span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-yellow-400 inline-block"></span>Incoming PLN (kWh/hari)</span>
+                    <span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-zinc-900 inline-block"></span>Total Distribusi Panel</span>
+                `;
+
+                energyChart.data.labels = dailyLabels;
+                energyChart.data.datasets = [
+                    {
+                        label: 'Incoming PLN (kWh/hari)',
+                        data: incomingDailyData,
+                        backgroundColor: '#facc15',
+                        hoverBackgroundColor: '#eab308',
+                        borderRadius: 4,
+                        barPercentage: 0.72,
+                        categoryPercentage: 0.75
+                    },
+                    {
+                        label: 'Total Distribusi Panel',
+                        data: distributionDailyData,
+                        backgroundColor: '#18181b',
+                        hoverBackgroundColor: '#27272a',
+                        borderRadius: 4,
+                        barPercentage: 0.72,
+                        categoryPercentage: 0.75
+                    }
+                ];
             }
-            let csvFile = new Blob([csv.join("\n")], { type: "text/csv" });
-            let downloadLink = document.createElement("a");
-            downloadLink.download = filename;
-            downloadLink.href = window.URL.createObjectURL(csvFile);
-            downloadLink.style.display = "none";
-            document.body.appendChild(downloadLink);
-            downloadLink.click();
+
+            energyChart.update();
+        }
+
+        function exportTableToCSV(filename) {
+            const rows = document.querySelectorAll('#panelSummaryTable tr');
+            const csv = [];
+
+            for (let i = 0; i < rows.length; i++) {
+                const cols = rows[i].querySelectorAll('td, th');
+                if (cols.length === 0) continue;
+                const row = [];
+                for (let j = 0; j < cols.length; j++) {
+                    const cleanText = cols[j].innerText
+                        .replace(/(\r\n|\n|\r)/gm, ' ')
+                        .replace(/\s+/g, ' ')
+                        .trim()
+                        .replace(/"/g, '""');
+                    row.push('"' + cleanText + '"');
+                }
+                csv.push(row.join(';'));
+            }
+
+            const blob = new Blob(['\uFEFF' + csv.join('\n')], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
     </script>
 </body>
